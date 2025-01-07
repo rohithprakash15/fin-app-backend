@@ -11,13 +11,47 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsOptional, MaxLength } from "class-validator";
+import { CommentUpdateManyWithoutUsersInput } from "./CommentUpdateManyWithoutUsersInput";
+import {
+  ValidateNested,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from "class-validator";
+import { Type } from "class-transformer";
+import { DiscussionUpdateManyWithoutUsersInput } from "./DiscussionUpdateManyWithoutUsersInput";
 import { IsJSONValue } from "../../validators";
 import { GraphQLJSON } from "graphql-type-json";
 import { InputJsonValue } from "../../types";
+import { SchemeApplicationUpdateManyWithoutUsersInput } from "./SchemeApplicationUpdateManyWithoutUsersInput";
+import { UserProgressUpdateManyWithoutUsersInput } from "./UserProgressUpdateManyWithoutUsersInput";
 
 @InputType()
 class UserUpdateInput {
+  @ApiProperty({
+    required: false,
+    type: () => CommentUpdateManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => CommentUpdateManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => CommentUpdateManyWithoutUsersInput, {
+    nullable: true,
+  })
+  comments?: CommentUpdateManyWithoutUsersInput;
+
+  @ApiProperty({
+    required: false,
+    type: () => DiscussionUpdateManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => DiscussionUpdateManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => DiscussionUpdateManyWithoutUsersInput, {
+    nullable: true,
+  })
+  discussions?: DiscussionUpdateManyWithoutUsersInput;
+
   @ApiProperty({
     required: false,
     type: String,
@@ -73,6 +107,30 @@ class UserUpdateInput {
     nullable: true,
   })
   roles?: InputJsonValue;
+
+  @ApiProperty({
+    required: false,
+    type: () => SchemeApplicationUpdateManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => SchemeApplicationUpdateManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => SchemeApplicationUpdateManyWithoutUsersInput, {
+    nullable: true,
+  })
+  schemeApplications?: SchemeApplicationUpdateManyWithoutUsersInput;
+
+  @ApiProperty({
+    required: false,
+    type: () => UserProgressUpdateManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => UserProgressUpdateManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => UserProgressUpdateManyWithoutUsersInput, {
+    nullable: true,
+  })
+  userProgresses?: UserProgressUpdateManyWithoutUsersInput;
 
   @ApiProperty({
     required: false,

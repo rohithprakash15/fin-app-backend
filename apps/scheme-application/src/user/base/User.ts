@@ -11,14 +11,33 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDate, IsString, IsOptional, MaxLength } from "class-validator";
+import { Comment } from "../../comment/base/Comment";
+import {
+  ValidateNested,
+  IsOptional,
+  IsDate,
+  IsString,
+  MaxLength,
+} from "class-validator";
 import { Type } from "class-transformer";
+import { Discussion } from "../../discussion/base/Discussion";
 import { IsJSONValue } from "../../validators";
 import { GraphQLJSON } from "graphql-type-json";
 import { JsonValue } from "type-fest";
+import { SchemeApplication } from "../../schemeApplication/base/SchemeApplication";
+import { UserProgress } from "../../userProgress/base/UserProgress";
 
 @ObjectType()
 class User {
+  @ApiProperty({
+    required: false,
+    type: () => [Comment],
+  })
+  @ValidateNested()
+  @Type(() => Comment)
+  @IsOptional()
+  comments?: Array<Comment>;
+
   @ApiProperty({
     required: true,
   })
@@ -26,6 +45,15 @@ class User {
   @Type(() => Date)
   @Field(() => Date)
   createdAt!: Date;
+
+  @ApiProperty({
+    required: false,
+    type: () => [Discussion],
+  })
+  @ValidateNested()
+  @Type(() => Discussion)
+  @IsOptional()
+  discussions?: Array<Discussion>;
 
   @ApiProperty({
     required: false,
@@ -78,12 +106,30 @@ class User {
   roles!: JsonValue;
 
   @ApiProperty({
+    required: false,
+    type: () => [SchemeApplication],
+  })
+  @ValidateNested()
+  @Type(() => SchemeApplication)
+  @IsOptional()
+  schemeApplications?: Array<SchemeApplication>;
+
+  @ApiProperty({
     required: true,
   })
   @IsDate()
   @Type(() => Date)
   @Field(() => Date)
   updatedAt!: Date;
+
+  @ApiProperty({
+    required: false,
+    type: () => [UserProgress],
+  })
+  @ValidateNested()
+  @Type(() => UserProgress)
+  @IsOptional()
+  userProgresses?: Array<UserProgress>;
 
   @ApiProperty({
     required: true,

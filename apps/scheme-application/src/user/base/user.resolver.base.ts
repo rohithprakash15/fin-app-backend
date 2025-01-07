@@ -26,6 +26,14 @@ import { UserFindUniqueArgs } from "./UserFindUniqueArgs";
 import { CreateUserArgs } from "./CreateUserArgs";
 import { UpdateUserArgs } from "./UpdateUserArgs";
 import { DeleteUserArgs } from "./DeleteUserArgs";
+import { CommentFindManyArgs } from "../../comment/base/CommentFindManyArgs";
+import { Comment } from "../../comment/base/Comment";
+import { DiscussionFindManyArgs } from "../../discussion/base/DiscussionFindManyArgs";
+import { Discussion } from "../../discussion/base/Discussion";
+import { SchemeApplicationFindManyArgs } from "../../schemeApplication/base/SchemeApplicationFindManyArgs";
+import { SchemeApplication } from "../../schemeApplication/base/SchemeApplication";
+import { UserProgressFindManyArgs } from "../../userProgress/base/UserProgressFindManyArgs";
+import { UserProgress } from "../../userProgress/base/UserProgress";
 import { UserService } from "../user.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
 @graphql.Resolver(() => User)
@@ -130,5 +138,87 @@ export class UserResolverBase {
       }
       throw error;
     }
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [Comment], { name: "comments" })
+  @nestAccessControl.UseRoles({
+    resource: "Comment",
+    action: "read",
+    possession: "any",
+  })
+  async findComments(
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: CommentFindManyArgs
+  ): Promise<Comment[]> {
+    const results = await this.service.findComments(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [Discussion], { name: "discussions" })
+  @nestAccessControl.UseRoles({
+    resource: "Discussion",
+    action: "read",
+    possession: "any",
+  })
+  async findDiscussions(
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: DiscussionFindManyArgs
+  ): Promise<Discussion[]> {
+    const results = await this.service.findDiscussions(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [SchemeApplication], {
+    name: "schemeApplications",
+  })
+  @nestAccessControl.UseRoles({
+    resource: "SchemeApplication",
+    action: "read",
+    possession: "any",
+  })
+  async findSchemeApplications(
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: SchemeApplicationFindManyArgs
+  ): Promise<SchemeApplication[]> {
+    const results = await this.service.findSchemeApplications(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [UserProgress], { name: "userProgresses" })
+  @nestAccessControl.UseRoles({
+    resource: "UserProgress",
+    action: "read",
+    possession: "any",
+  })
+  async findUserProgresses(
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: UserProgressFindManyArgs
+  ): Promise<UserProgress[]> {
+    const results = await this.service.findUserProgresses(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
   }
 }

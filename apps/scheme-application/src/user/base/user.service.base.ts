@@ -10,7 +10,16 @@ https://docs.amplication.com/how-to/custom-code
 ------------------------------------------------------------------------------
   */
 import { PrismaService } from "../../prisma/prisma.service";
-import { Prisma, User as PrismaUser } from "@prisma/client";
+
+import {
+  Prisma,
+  User as PrismaUser,
+  Comment as PrismaComment,
+  Discussion as PrismaDiscussion,
+  SchemeApplication as PrismaSchemeApplication,
+  UserProgress as PrismaUserProgress,
+} from "@prisma/client";
+
 import { PasswordService } from "../../auth/password.service";
 import { transformStringFieldUpdateInput } from "../../prisma.util";
 
@@ -58,5 +67,49 @@ export class UserServiceBase {
   }
   async deleteUser(args: Prisma.UserDeleteArgs): Promise<PrismaUser> {
     return this.prisma.user.delete(args);
+  }
+
+  async findComments(
+    parentId: string,
+    args: Prisma.CommentFindManyArgs
+  ): Promise<PrismaComment[]> {
+    return this.prisma.user
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .comments(args);
+  }
+
+  async findDiscussions(
+    parentId: string,
+    args: Prisma.DiscussionFindManyArgs
+  ): Promise<PrismaDiscussion[]> {
+    return this.prisma.user
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .discussions(args);
+  }
+
+  async findSchemeApplications(
+    parentId: string,
+    args: Prisma.SchemeApplicationFindManyArgs
+  ): Promise<PrismaSchemeApplication[]> {
+    return this.prisma.user
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .schemeApplications(args);
+  }
+
+  async findUserProgresses(
+    parentId: string,
+    args: Prisma.UserProgressFindManyArgs
+  ): Promise<PrismaUserProgress[]> {
+    return this.prisma.user
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .userProgresses(args);
   }
 }

@@ -11,13 +11,41 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { StringNullableFilter } from "../../util/StringNullableFilter";
+import { CommentListRelationFilter } from "../../comment/base/CommentListRelationFilter";
+import { ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
-import { IsOptional } from "class-validator";
+import { DiscussionListRelationFilter } from "../../discussion/base/DiscussionListRelationFilter";
+import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { StringFilter } from "../../util/StringFilter";
+import { SchemeApplicationListRelationFilter } from "../../schemeApplication/base/SchemeApplicationListRelationFilter";
+import { UserProgressListRelationFilter } from "../../userProgress/base/UserProgressListRelationFilter";
 
 @InputType()
 class UserWhereInput {
+  @ApiProperty({
+    required: false,
+    type: () => CommentListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => CommentListRelationFilter)
+  @IsOptional()
+  @Field(() => CommentListRelationFilter, {
+    nullable: true,
+  })
+  comments?: CommentListRelationFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => DiscussionListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => DiscussionListRelationFilter)
+  @IsOptional()
+  @Field(() => DiscussionListRelationFilter, {
+    nullable: true,
+  })
+  discussions?: DiscussionListRelationFilter;
+
   @ApiProperty({
     required: false,
     type: StringNullableFilter,
@@ -61,6 +89,30 @@ class UserWhereInput {
     nullable: true,
   })
   lastName?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => SchemeApplicationListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => SchemeApplicationListRelationFilter)
+  @IsOptional()
+  @Field(() => SchemeApplicationListRelationFilter, {
+    nullable: true,
+  })
+  schemeApplications?: SchemeApplicationListRelationFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => UserProgressListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => UserProgressListRelationFilter)
+  @IsOptional()
+  @Field(() => UserProgressListRelationFilter, {
+    nullable: true,
+  })
+  userProgresses?: UserProgressListRelationFilter;
 
   @ApiProperty({
     required: false,

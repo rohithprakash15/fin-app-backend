@@ -11,13 +11,47 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsOptional, MaxLength } from "class-validator";
+import { CommentCreateNestedManyWithoutUsersInput } from "./CommentCreateNestedManyWithoutUsersInput";
+import {
+  ValidateNested,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from "class-validator";
+import { Type } from "class-transformer";
+import { DiscussionCreateNestedManyWithoutUsersInput } from "./DiscussionCreateNestedManyWithoutUsersInput";
 import { IsJSONValue } from "../../validators";
 import { GraphQLJSON } from "graphql-type-json";
 import { InputJsonValue } from "../../types";
+import { SchemeApplicationCreateNestedManyWithoutUsersInput } from "./SchemeApplicationCreateNestedManyWithoutUsersInput";
+import { UserProgressCreateNestedManyWithoutUsersInput } from "./UserProgressCreateNestedManyWithoutUsersInput";
 
 @InputType()
 class UserCreateInput {
+  @ApiProperty({
+    required: false,
+    type: () => CommentCreateNestedManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => CommentCreateNestedManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => CommentCreateNestedManyWithoutUsersInput, {
+    nullable: true,
+  })
+  comments?: CommentCreateNestedManyWithoutUsersInput;
+
+  @ApiProperty({
+    required: false,
+    type: () => DiscussionCreateNestedManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => DiscussionCreateNestedManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => DiscussionCreateNestedManyWithoutUsersInput, {
+    nullable: true,
+  })
+  discussions?: DiscussionCreateNestedManyWithoutUsersInput;
+
   @ApiProperty({
     required: false,
     type: String,
@@ -67,6 +101,30 @@ class UserCreateInput {
   @IsJSONValue()
   @Field(() => GraphQLJSON)
   roles!: InputJsonValue;
+
+  @ApiProperty({
+    required: false,
+    type: () => SchemeApplicationCreateNestedManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => SchemeApplicationCreateNestedManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => SchemeApplicationCreateNestedManyWithoutUsersInput, {
+    nullable: true,
+  })
+  schemeApplications?: SchemeApplicationCreateNestedManyWithoutUsersInput;
+
+  @ApiProperty({
+    required: false,
+    type: () => UserProgressCreateNestedManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => UserProgressCreateNestedManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => UserProgressCreateNestedManyWithoutUsersInput, {
+    nullable: true,
+  })
+  userProgresses?: UserProgressCreateNestedManyWithoutUsersInput;
 
   @ApiProperty({
     required: true,

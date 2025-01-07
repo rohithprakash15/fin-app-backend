@@ -1,0 +1,129 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  comments           Comment[]
+  createdAt          DateTime            @default(now())
+  discussions        Discussion[]
+  email              String?             @unique
+  firstName          String?
+  id                 String              @id @default(auto()) @map("_id") @db.ObjectId
+  lastName           String?
+  password           String
+  roles              Json
+  schemeApplications SchemeApplication[]
+  updatedAt          DateTime            @updatedAt
+  userProgresses     UserProgress[]
+  username           String              @unique
+}
+
+model Course {
+  category       String?
+  createdAt      DateTime        @default(now())
+  description    String?
+  icon           String?
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  lessonContents LessonContent[]
+  title          String?
+  updatedAt      DateTime        @updatedAt
+  userProgresses UserProgress[]
+}
+
+model LessonContent {
+  audioContent String?
+  content      String?
+  course       Course?  @relation(fields: [courseId], references: [id])
+  courseId     String?  @db.ObjectId
+  createdAt    DateTime @default(now())
+  duration     Int?
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  order        Int?
+  title        String?
+  updatedAt    DateTime @updatedAt
+}
+
+model SchemeApplication {
+  createdAt   DateTime  @default(now())
+  documents   Json?
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  scheme      Scheme?   @relation(fields: [schemeId], references: [id])
+  schemeId    String?   @db.ObjectId
+  status      String?
+  submittedAt DateTime?
+  updatedAt   DateTime  @updatedAt
+  user        User?     @relation(fields: [userId], references: [id])
+  userId      String?   @db.ObjectId
+}
+
+model LanguageContent {
+  audioContent String?
+  contentId    String?
+  contentType  String?
+  createdAt    DateTime @default(now())
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  language     String?
+  textContent  String?
+  updatedAt    DateTime @updatedAt
+}
+
+model Comment {
+  audioContent String?
+  content      String?
+  createdAt    DateTime    @default(now())
+  discussion   Discussion? @relation(fields: [discussionId], references: [id])
+  discussionId String?     @db.ObjectId
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  updatedAt    DateTime    @updatedAt
+  user         User?       @relation(fields: [userId], references: [id])
+  userId       String?     @db.ObjectId
+}
+
+model UserProgress {
+  completed        Boolean?
+  completedLessons Json?
+  course           Course?   @relation(fields: [courseId], references: [id])
+  courseId         String?   @db.ObjectId
+  createdAt        DateTime  @default(now())
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  lastAccessedAt   DateTime?
+  progress         Int?
+  startedAt        DateTime?
+  updatedAt        DateTime  @updatedAt
+  user             User?     @relation(fields: [userId], references: [id])
+  userId           String?   @db.ObjectId
+}
+
+model Discussion {
+  audioContent String?
+  comments     Comment[]
+  content      String?
+  createdAt    DateTime  @default(now())
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  language     String?
+  likes        Int?
+  updatedAt    DateTime  @updatedAt
+  user         User?     @relation(fields: [userId], references: [id])
+  userId       String?   @db.ObjectId
+}
+
+model Scheme {
+  applicationProcess String?
+  audioDescription   String?
+  benefits           String?
+  category           String?
+  createdAt          DateTime            @default(now())
+  description        String?
+  documents          Json?
+  eligibility        String?
+  icon               String?
+  id                 String              @id @default(auto()) @map("_id") @db.ObjectId
+  schemeApplications SchemeApplication[]
+  title              String?
+  updatedAt          DateTime            @updatedAt
+}
